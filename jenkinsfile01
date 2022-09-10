@@ -3,7 +3,12 @@ pipeline {
     stages {
       stage('git_checkout') {
 		   steps {
-                   checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'git_cred', url: 'https://github.com/vidya-1995/DevopsBasics.git']]])
+                   checkout([$class: 'GitSCM', 
+		   branches: [[name: '*/master']], 
+		   extensions: [], 
+		   userRemoteConfigs: [
+		   [credentialsId: 'git_cred', 
+		   url: 'https://github.com/vidya-1995/DevopsBasics.git']]])
 			}
 		}
       stage('Build') {
@@ -17,6 +22,24 @@ pipeline {
   			 sh "mvn sonar:sonar"
 			}
 		    }
+		}
+	stage('nexus') {
+		    steps {
+		    	nexusArtifactUploader artifacts: [
+			[artifactId: 'maven-project', 
+			classifier: '', 
+			file: '', 
+			type: 'war']
+			], 
+			credentialsId: 'nexus_cred', 
+			groupId: 'com.example.maven-project', 
+			nexusUrl: '13.214.38.234:8081', 
+			nexusVersion: 'nexus3', 
+			protocol: 'http', 
+			repository: 'first_repo', 
+			version: '1.0-SNAPSHOT'
+		    }
+		
 		}
 	}
  }
