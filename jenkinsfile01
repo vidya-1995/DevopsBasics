@@ -1,7 +1,7 @@
 pipeline {
-	agent { label 'maven2' }
-		stages {
-                stage('git_checkout') {
+    agent { label 'maven2' }
+    stages {
+      stage('git_checkout') {
 		   steps {
                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'git_cred', url: 'https://github.com/vidya-1995/DevopsBasics.git']]])
 			}
@@ -11,5 +11,12 @@ pipeline {
              sh "mvn clean install"
 			}
 		}
-  }
+      stage('sonar') {
+		   steps {
+                         withSonarQubeEnv('sonar-8.9') {
+  			 sh "mvn sonar:sonar"
+			}
+		    }
+		}
+	}
 }
