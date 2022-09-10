@@ -28,7 +28,7 @@ pipeline {
 		    	nexusArtifactUploader artifacts: [
 			[artifactId: 'maven-project', 
 			classifier: '', 
-			file: '', 
+			file: 'tmp/maven-project-site', 
 			type: 'war']
 			], 
 			credentialsId: 'nexus_cred', 
